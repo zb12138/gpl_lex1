@@ -2787,7 +2787,7 @@ int get_areg(SYMB *b, int cr)
 		}
 	}
 }
-#include<unordered_map>
+#include<map>
 using namespace std;
 
 enum sytype { unkonwPunc, invalidComb, correct };//词法状态
@@ -2813,13 +2813,7 @@ public:
 	};
 };
 
-struct hash_name {//hash 函数
-	size_t operator()(const SYMBOL & p) const {
-		return hash<string>()(p.lexme) ^ hash<int>()(p.type);
-	}
-};
-//无序hash表
-typedef unordered_map<SYMBOL, int *, hash_name> SYMBOLMAP;//符号表类型，键值为地址
+typedef map<SYMBOL, int *> SYMBOLMAP;//符号表类型，键值为地址
 
 
 char punctuators[20] = {
