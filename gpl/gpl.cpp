@@ -2821,6 +2821,7 @@ struct hash_name {//hash 函数
 //无序hash表
 typedef unordered_map<SYMBOL, int *, hash_name> SYMBOLMAP;//符号表类型，键值为地址
 
+
 char punctuators[20] = {
 	'(',')',
 	'{','}',
@@ -2833,6 +2834,10 @@ char AppendInfo[1000] = { 0 };//附加信息
 int Append = 0; //附加模式
 int AppIp = 0; //附加信息指针
 SYMBOLMAP SymbolMap;//符号表
+char lexmeStr[1000] = { 0 };//存放字面量的线性空间
+char* lexmeStrIp = lexmeStr;//lexmeStr指针
+int constArry[1000] = { 0 };//存放常量的线性空间
+int* constArryIp = constArry;//lexmeStr指针
 
 SYMBOLMAP::iterator IdfindInMap(SYMBOLMAP &Map, SYMBOL &val)//在Map 中查找，找到返回迭代器
 {
@@ -2843,13 +2848,15 @@ SYMBOLMAP::iterator IdfindInMap(SYMBOLMAP &Map, SYMBOL &val)//在Map 中查找�
 	{
 		if (val.type == sINTEGER)
 		{
-			int *p = (int *)malloc(4);
-			*p = atoi(val.lexme);
-			Map[val] = (int *)p;
+			*constArryIp = atoi(val.lexme);
+			Map[val] = (int *)constArryIp;
+			constArryIp++;
 		}
 		if (val.type == sTEXT || val.type == sIDENTIFIER)
 		{
-			Map[val] = (int *)val.lexme;
+			strcpy(lexmeStrIp, val.lexme);
+			Map[val] = (int *)lexmeStrIp;
+			lexmeStrIp += strlen(val.lexme)+1;
 		}
 	}
 	return  it;
